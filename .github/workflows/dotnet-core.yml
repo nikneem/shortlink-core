@@ -27,4 +27,4 @@ jobs:
     - name: Publish NuGet
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
-        PROJECT_FILE_PATH: HexMaster.ShortLink.Core
+        PROJECT_FILE_PATH: HexMaster.ShortLink.Core/HexMaster.ShortLink.Core.csproj
