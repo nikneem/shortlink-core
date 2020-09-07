@@ -1,4 +1,4 @@
-﻿namespace HexMaster.ShortLink.Messages
+﻿namespace HexMaster.ShortLink.Core
 {
     public class Constants
     {

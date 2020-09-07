@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Azure.Cosmos.Table;
 
-namespace HexMaster.ShortLink.Data.Entities
+namespace HexMaster.ShortLink.Core.Entities
 {
     public class HitsAggregateDailyEntity : TableEntity
     {
