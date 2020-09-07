@@ -1,7 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Eduard Keilholz</Authors>
+    <Description>This is the core of the ShortLink project. It's a .NET Core demo project used for educational purpose</Description>
+    <Copyright>2020</Copyright>
+    <PackageProjectUrl>https://github.com/nikneem/shortlink-core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nikneem/shortlink-core</RepositoryUrl>
+    <PackageReleaseNotes>Initial commit</PackageReleaseNotes>
+      <Year>$([System.DateTime]::UtcNow.ToString("yy"))</Year>
+      <Month>$([System.DateTime]::UtcNow.ToString("MM"))</Month>
+      <Date>$([System.DateTime]::UtcNow.ToString("dd"))</Date>
+      <Time>$([System.DateTime]::UtcNow.ToString("HHmm"))</Time>
+      <Version>$(Year).$(Month).$(Date).$(Time)</Version>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
