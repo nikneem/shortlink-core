@@ -1,7 +1,7 @@
 ﻿using System;
 using HexMaster.ShortLink.Core.Entities;
 
-namespace HexMaster.ShortLink.Core.Models.ShortLinks
+namespace HexMaster.ShortLink.Core.ShortLinks.Models
 {
     public class ShortLinkDetailsDto
     {

@@ -1,0 +1,56 @@
+﻿using HexMaster.ShortLink.Core.Helpers;
+using HexMaster.ShortLink.Core.ShortLinks.Contracts;
+using HexMaster.ShortLink.Core.ShortLinks.Repositories;
+using HexMaster.ShortLink.Core.ShortLinks.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+namespace HexMaster.ShortLink.Core.Configuration
+{
+    public static class ServiceCollectionExtensions
+    {
+        public static void ConfigureCore(this IServiceCollection serviceCollection, IConfiguration config)
+        {
+            serviceCollection.ConfigureAndValidate<CloudConfiguration, CloudConfigurationValidator>(
+                config.GetSection(CloudConfiguration.SectionName));
+
+            serviceCollection.AddScoped<IShortLinksService, ShortLinksService>();
+            serviceCollection.AddScoped<IShortLinksRepository, ShortLinksRepository>();
+
+            serviceCollection.AddSingleton<ShortCodeGenerator>();
+        }
+
+
+        public static IServiceCollection ConfigureAndValidate<T, TValidator>(this IServiceCollection services, IConfiguration configurationSection)
+            where T : class, new()
+            where TValidator : class, IValidateOptions<T>, new()
+        {
+            services.Configure<T>(configurationSection);
+            services.AddSingleton<IValidateOptions<T>, TValidator>();
+            var container = services.BuildServiceProvider();
+
+            try
+            {
+                var options = container.GetService<IOptions<T>>();
+                var validator = new TValidator();
+                var validationResult = validator.Validate(string.Empty, options.Value);
+
+
+                if (validationResult.Failed)
+                {
+                    var message = $"AppSettings section '{typeof(T).Name}' failed validation. Reason: {validationResult.FailureMessage}";
+                    throw new OptionsValidationException(string.Empty, typeof(T), new[] { message });
+                }
+            }
+
+            finally
+            {
+                container.Dispose();
+            }
+
+            return services;
+        }
+
+    }
+}

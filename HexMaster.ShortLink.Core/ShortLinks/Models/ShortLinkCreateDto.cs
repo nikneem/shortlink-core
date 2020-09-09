@@ -1,4 +1,4 @@
-﻿namespace HexMaster.ShortLink.Core.Models.ShortLinks
+﻿namespace HexMaster.ShortLink.Core.ShortLinks.Models
 {
     public class ShortLinkCreateDto
     {

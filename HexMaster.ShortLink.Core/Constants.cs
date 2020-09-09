@@ -4,6 +4,8 @@
     {
         public const string UrlRegularExpression = "(?<Protocol>\\w+):\\/\\/(?<Domain>[\\w@][\\w.:@]+)\\/?[\\w\\.?=%&=\\-@/$,]*";
         public const string ShortCodeRegularExpression = "^[a-z][a-z0-9]{1,19}$";
+
+        public const int DefaultShortLinkLength = 6;
     }
 
     public class HubNames

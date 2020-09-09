@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using HexMaster.ShortLink.Core.Enums;
 using HexMaster.ShortLink.Core.Exceptions;
-using HexMaster.ShortLink.Core.Models.ShortLinks;
+using HexMaster.ShortLink.Core.ShortLinks.Models;
 
 namespace HexMaster.ShortLink.Core.Validators
 {

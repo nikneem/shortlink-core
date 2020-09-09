@@ -9,6 +9,15 @@ namespace HexMaster.ShortLink.Core.Tests.Helpers
     public class CodeGenerationTests
     {
 
+        private ShortCodeGenerator _generator;
+
+        [SetUp]
+        public void Setup()
+        {
+            _generator = new ShortCodeGenerator();
+        }
+
+
         [TestCase(2)]
         [TestCase(3)]
         [TestCase(4)]
@@ -30,7 +39,7 @@ namespace HexMaster.ShortLink.Core.Tests.Helpers
         [TestCase(20)]
         public void WhenShortCodeIsGenerated_ThenAValidShortCodeIsReturned(int length)
         {
-            var shortCode = ShortCodeGenerator.GenerateShortCode(length);
+            var shortCode = _generator.GenerateShortCode(length);
             Assert.IsTrue(Regex.IsMatch(shortCode, Constants.ShortCodeRegularExpression));
         }
 
@@ -38,7 +47,7 @@ namespace HexMaster.ShortLink.Core.Tests.Helpers
         [TestCase(21)]
         public void WhenShortCodeLenthIsInvalid_ThenArgumentOutOfRangeExceptionIsThrown(int length)
         {
-            var act = new TestDelegate(() => ShortCodeGenerator.GenerateShortCode(length));
+            var act = new TestDelegate(() => _generator.GenerateShortCode(length));
             Assert.Throws<ArgumentOutOfRangeException>(act, "Found a validation error");
         }
 
