@@ -7,7 +7,7 @@ namespace HexMaster.ShortLink.Core.Exceptions
 {
     public class ModelValidationException : Exception
     {
-        private readonly IReadOnlyList<ErrorCode> _errors;
+        public IReadOnlyList<ErrorCode> Errors { get; }
 
         public ModelValidationException(
             List<ErrorCode> errors,
@@ -15,7 +15,7 @@ namespace HexMaster.ShortLink.Core.Exceptions
             Exception innerException = null)
         :base(message, innerException)
         {
-            _errors = errors;
+            Errors = errors;
         }
     }
 }
