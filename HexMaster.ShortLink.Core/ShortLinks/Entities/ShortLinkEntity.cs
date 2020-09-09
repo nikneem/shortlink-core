@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Azure.Cosmos.Table;
 
-namespace HexMaster.ShortLink.Core.Entities
+namespace HexMaster.ShortLink.Core.ShortLinks.Entities
 {
-    public sealed class ShortLinkEntity : TableEntity
+    internal sealed class ShortLinkEntity : TableEntity
     {
         public string OwnerId { get; set; }
         public string ShortCode { get; set; }

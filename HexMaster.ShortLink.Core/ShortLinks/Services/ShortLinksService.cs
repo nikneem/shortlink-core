@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using HexMaster.ShortLink.Core.Entities;
 using HexMaster.ShortLink.Core.Helpers;
 using HexMaster.ShortLink.Core.ShortLinks.Contracts;
-using Microsoft.Azure.Cosmos.Table;
+using HexMaster.ShortLink.Core.ShortLinks.Models;
+using HexMaster.ShortLink.Core.Validators;
 
 namespace HexMaster.ShortLink.Core.ShortLinks.Services
 {
@@ -11,7 +11,9 @@ namespace HexMaster.ShortLink.Core.ShortLinks.Services
         private readonly IShortLinksRepository _repository;
         private readonly ShortCodeGenerator _generator;
 
-        public ShortLinksService(IShortLinksRepository repository, ShortCodeGenerator generator)
+        public ShortLinksService(
+            IShortLinksRepository repository,
+            ShortCodeGenerator generator)
         {
             _repository = repository;
             _generator = generator;
@@ -29,6 +31,15 @@ namespace HexMaster.ShortLink.Core.ShortLinks.Services
 
             return shortCode;
         }
+
+        public async Task<ShortLinkDetailsDto> CreateAsync(ShortLinkCreateDto dto)
+        {
+            await ShortLinkCreateValidator.ValidateModelAsync(dto);
+            var shortCode = await GenerateUniqueShortLink();
+            return await _repository.CreateNewShortLinkAsync(shortCode, dto.EndpointUrl, "banana");
+        }
+
+
 
     }
 }

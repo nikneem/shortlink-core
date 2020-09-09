@@ -1,5 +1,6 @@
 ﻿using System;
 using HexMaster.ShortLink.Core.Entities;
+using HexMaster.ShortLink.Core.ShortLinks.Entities;
 
 namespace HexMaster.ShortLink.Core.ShortLinks.Models
 {
@@ -12,7 +13,7 @@ namespace HexMaster.ShortLink.Core.ShortLinks.Models
         public DateTimeOffset? ExpirationOn { get; set; }
         public long TotalHits { get; set; }
 
-        public static ShortLinkDetailsDto CreateFromEntity(ShortLinkEntity entity)
+        internal static ShortLinkDetailsDto CreateFromEntity(ShortLinkEntity entity)
         {
             return new ShortLinkDetailsDto
             {

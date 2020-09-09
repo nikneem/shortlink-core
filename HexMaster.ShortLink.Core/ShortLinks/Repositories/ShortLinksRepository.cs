@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
-using HexMaster.ShortLink.Core.Entities;
+﻿using System;
+using System.Threading.Tasks;
 using HexMaster.ShortLink.Core.Helpers;
 using HexMaster.ShortLink.Core.ShortLinks.Contracts;
+using HexMaster.ShortLink.Core.ShortLinks.Entities;
+using HexMaster.ShortLink.Core.ShortLinks.Models;
 using Microsoft.Azure.Cosmos.Table;
 
 namespace HexMaster.ShortLink.Core.ShortLinks.Repositories
@@ -34,5 +36,29 @@ namespace HexMaster.ShortLink.Core.ShortLinks.Repositories
 
             return segment.Results.Count == 0;
         }
+
+        public async Task<ShortLinkDetailsDto> CreateNewShortLinkAsync(
+            string shortCode, 
+            string endpointUrl,
+            string ownerId)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+            var shortLinkEntity = new ShortLinkEntity
+            {
+                PartitionKey = PartitionKeys.ShortLinks,
+                RowKey = Guid.NewGuid().ToString(),
+                EndpointUrl = endpointUrl,
+                ShortCode = shortCode,
+                CreatedOn = DateTimeOffset.UtcNow,
+                ExpiresOn = DateTimeOffset.UtcNow.AddMonths(3),
+                OwnerId = ownerId,
+                TotalHits = 0,
+                Timestamp = DateTimeOffset.UtcNow
+            };
+            var tableOperation = TableOperation.Insert(shortLinkEntity);
+            await table.ExecuteAsync(tableOperation);
+            return ShortLinkDetailsDto.CreateFromEntity(shortLinkEntity);
+        }
+
     }
 }

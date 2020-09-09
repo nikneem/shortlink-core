@@ -10,7 +10,7 @@ namespace HexMaster.ShortLink.Core.Helpers
         private  readonly Random _random;
 
 
-        public  string GenerateShortCode(int maxLength = 6)
+        public  string GenerateShortCode(int maxLength = Constants.DefaultShortLinkLength)
         {
             if (maxLength < 2 || maxLength > 20)
             {
