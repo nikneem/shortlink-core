@@ -2,7 +2,7 @@
 {
     public class Constants
     {
-        
+        public const string UrlRegularExpression = "(?<Protocol>\\w+):\\/\\/(?<Domain>[\\w@][\\w.:@]+)\\/?[\\w\\.?=%&=\\-@/$,]*";
     }
 
     public class HubNames
