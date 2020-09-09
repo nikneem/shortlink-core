@@ -3,6 +3,7 @@
     public class Constants
     {
         public const string UrlRegularExpression = "(?<Protocol>\\w+):\\/\\/(?<Domain>[\\w@][\\w.:@]+)\\/?[\\w\\.?=%&=\\-@/$,]*";
+        public const string ShortCodeRegularExpression = "^[a-z][a-z0-9]{1,19}$";
     }
 
     public class HubNames
