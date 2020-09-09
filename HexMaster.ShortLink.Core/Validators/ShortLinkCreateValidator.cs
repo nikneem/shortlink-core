@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using HexMaster.ShortLink.Core.Enums;
@@ -10,7 +9,6 @@ using HexMaster.ShortLink.Core.Models.ShortLinks;
 namespace HexMaster.ShortLink.Core.Validators
 {
     public class ShortLinkCreateValidator : AbstractValidator<ShortLinkCreateDto>
-
     {
 
         public ShortLinkCreateValidator()
