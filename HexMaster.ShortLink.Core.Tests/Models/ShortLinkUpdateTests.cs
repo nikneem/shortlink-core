@@ -1,6 +1,6 @@
 ﻿using System;
 using HexMaster.ShortLink.Core.Exceptions;
-using HexMaster.ShortLink.Core.ShortLinks.Models;
+using HexMaster.ShortLink.Core.Models;
 using HexMaster.ShortLink.Core.Validators;
 using NUnit.Framework;
 

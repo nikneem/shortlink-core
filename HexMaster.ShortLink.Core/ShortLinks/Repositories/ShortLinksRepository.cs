@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using HexMaster.ShortLink.Core.Contracts;
+using HexMaster.ShortLink.Core.Entities;
 using HexMaster.ShortLink.Core.Helpers;
-using HexMaster.ShortLink.Core.ShortLinks.Contracts;
-using HexMaster.ShortLink.Core.ShortLinks.Entities;
-using HexMaster.ShortLink.Core.ShortLinks.Models;
+using HexMaster.ShortLink.Core.Models;
 using Microsoft.Azure.Cosmos.Table;
 
-namespace HexMaster.ShortLink.Core.ShortLinks.Repositories
+namespace HexMaster.ShortLink.Core.Repositories
 {
     public class ShortLinksRepository : IShortLinksRepository
     {
@@ -60,5 +60,17 @@ namespace HexMaster.ShortLink.Core.ShortLinks.Repositories
             return ShortLinkDetailsDto.CreateFromEntity(shortLinkEntity);
         }
 
+        public async Task UpdateExistingShortLinkAsync(ShortLinkUpdateDto dto)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+            var entity = new DynamicTableEntity(PartitionKeys.ShortLinks, dto.Id.ToString()) {ETag = "*"};
+
+            entity.Properties.Add(nameof(ShortLinkEntity.ShortCode), new EntityProperty(dto.ShortCode));
+            entity.Properties.Add(nameof(ShortLinkEntity.EndpointUrl), new EntityProperty(dto.EndpointUrl));
+            entity.Properties.Add(nameof(ShortLinkEntity.ExpiresOn), new EntityProperty(dto.ExpirationOn));
+
+            var mergeOperation = TableOperation.Merge(entity);
+            await table.ExecuteAsync(mergeOperation);
+        }
     }
 }

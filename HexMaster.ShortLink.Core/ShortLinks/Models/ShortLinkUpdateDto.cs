@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HexMaster.ShortLink.Core.ShortLinks.Models
+namespace HexMaster.ShortLink.Core.Models
 {
     public class ShortLinkUpdateDto
     {

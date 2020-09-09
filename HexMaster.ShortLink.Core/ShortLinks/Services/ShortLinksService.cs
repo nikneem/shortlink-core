@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Helpers;
-using HexMaster.ShortLink.Core.ShortLinks.Contracts;
-using HexMaster.ShortLink.Core.ShortLinks.Models;
+using HexMaster.ShortLink.Core.Models;
 using HexMaster.ShortLink.Core.Validators;
 
-namespace HexMaster.ShortLink.Core.ShortLinks.Services
+namespace HexMaster.ShortLink.Core.Services
 {
     public class ShortLinksService : IShortLinksService
     {
@@ -39,7 +40,15 @@ namespace HexMaster.ShortLink.Core.ShortLinks.Services
             return await _repository.CreateNewShortLinkAsync(shortCode, dto.EndpointUrl, "banana");
         }
 
-
-
+        public async Task UpdateAsync(Guid id, ShortLinkUpdateDto dto)
+        {
+            await ShortLinkUpdateValidator.ValidateModelAsync(dto);
+            if (!Equals(id, dto.Id))
+            {
+                throw new Exception("Unexpected request, cannot update the short link");
+            }
+            await _repository.UpdateExistingShortLinkAsync(dto);
+          
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Helpers;
-using HexMaster.ShortLink.Core.ShortLinks.Contracts;
-using HexMaster.ShortLink.Core.ShortLinks.Services;
+using HexMaster.ShortLink.Core.Services;
 using Moq;
 using NUnit.Framework;
 

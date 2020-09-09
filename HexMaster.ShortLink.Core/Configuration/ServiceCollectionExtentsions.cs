@@ -1,7 +1,7 @@
-﻿using HexMaster.ShortLink.Core.Helpers;
-using HexMaster.ShortLink.Core.ShortLinks.Contracts;
-using HexMaster.ShortLink.Core.ShortLinks.Repositories;
-using HexMaster.ShortLink.Core.ShortLinks.Services;
+﻿using HexMaster.ShortLink.Core.Contracts;
+using HexMaster.ShortLink.Core.Helpers;
+using HexMaster.ShortLink.Core.Repositories;
+using HexMaster.ShortLink.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

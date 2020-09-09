@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using HexMaster.ShortLink.Core.ShortLinks.Models;
+using HexMaster.ShortLink.Core.Models;
 
-namespace HexMaster.ShortLink.Core.ShortLinks.Contracts
+namespace HexMaster.ShortLink.Core.Contracts
 {
     public interface IShortLinksRepository
     {
@@ -11,5 +11,7 @@ namespace HexMaster.ShortLink.Core.ShortLinks.Contracts
             string shortCode,
             string endpointUrl,
             string ownerId);
+
+        Task UpdateExistingShortLinkAsync(ShortLinkUpdateDto dto);
     }
 }
