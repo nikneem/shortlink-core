@@ -1,4 +1,5 @@
 ﻿using System;
+using HexMaster.ShortLink.Core.Entities;
 
 namespace HexMaster.ShortLink.Core.Models.ShortLinks
 {
@@ -9,6 +10,19 @@ namespace HexMaster.ShortLink.Core.Models.ShortLinks
         public string EndpointUrl { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
         public DateTimeOffset? ExpirationOn { get; set; }
-        public int TotalHits { get; set; }
+        public long TotalHits { get; set; }
+
+        public static ShortLinkDetailsDto CreateFromEntity(ShortLinkEntity entity)
+        {
+            return new ShortLinkDetailsDto
+            {
+                Id = Guid.Parse(entity.RowKey),
+                EndpointUrl = entity.EndpointUrl,
+                ShortCode = entity.ShortCode,
+                CreatedOn = entity.CreatedOn,
+                ExpirationOn = entity.ExpiresOn,
+                TotalHits = entity.TotalHits
+            };
+        }
     }
 }
