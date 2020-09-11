@@ -15,6 +15,8 @@ namespace HexMaster.ShortLink.Core.Configuration
             serviceCollection.ConfigureAndValidate<CloudConfiguration, CloudConfigurationValidator>(
                 config.GetSection(CloudConfiguration.SectionName));
 
+
+            serviceCollection.AddScoped<ICloudTableFactory, CloudTableFactory>();
             serviceCollection.AddScoped<IShortLinksService, ShortLinksService>();
             serviceCollection.AddScoped<IShortLinksRepository, ShortLinksRepository>();
 

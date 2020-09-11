@@ -14,7 +14,7 @@
       <Date>$([System.DateTime]::UtcNow.ToString("dd"))</Date>
       <Time>$([System.DateTime]::UtcNow.ToString("HHmm"))</Time>
       <Version>$(Year).$(Month).$(Date).$(Time)</Version>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <AssemblyVersion>20.9.11.831</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
