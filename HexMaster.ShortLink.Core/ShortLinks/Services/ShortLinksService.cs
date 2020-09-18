@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Helpers;
@@ -33,11 +34,31 @@ namespace HexMaster.ShortLink.Core.Services
             return shortCode;
         }
 
-        public async Task<ShortLinkDetailsDto> CreateAsync(ShortLinkCreateDto dto)
+        public Task<List<ShortLinkListItemDto>> ListAsync(string ownerSubjectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ShortLinkDetailsDto> CreateAsync(ShortLinkCreateDto dto, string ownerSubjectId)
         {
             await ShortLinkCreateValidator.ValidateModelAsync(dto);
             var shortCode = await GenerateUniqueShortLink();
-            return await _repository.CreateNewShortLinkAsync(shortCode, dto.EndpointUrl, "banana");
+            return await _repository.CreateNewShortLinkAsync(shortCode, dto.EndpointUrl, ownerSubjectId);
+        }
+
+        public Task<ShortLinkDetailsDto> ReadAsync(Guid id, string ownerSubjectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(Guid id, ShortLinkUpdateDto dto, string ownerSubjectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(Guid id, string ownerSubjectId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task UpdateAsync(Guid id, ShortLinkUpdateDto dto)
