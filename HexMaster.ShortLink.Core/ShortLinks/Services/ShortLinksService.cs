@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HexMaster.ShortLink.Core.Contracts;
+using HexMaster.ShortLink.Core.Exceptions;
 using HexMaster.ShortLink.Core.Helpers;
 using HexMaster.ShortLink.Core.Models;
 using HexMaster.ShortLink.Core.Validators;
@@ -51,9 +52,17 @@ namespace HexMaster.ShortLink.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Guid id, ShortLinkUpdateDto dto, string ownerSubjectId)
+        public async Task UpdateAsync(Guid id, ShortLinkUpdateDto dto, string ownerSubjectId)
         {
-            throw new NotImplementedException();
+            if (!id.Equals(dto.Id))
+            {
+                throw new InvalidUpdateRequestException($"Update request for ID '{id}' contains a model with ID '{dto.Id}'");
+            }
+            await ShortLinkUpdateValidator.ValidateModelAsync(dto);
+            if (await _repository.CheckIfShortCodeIsUniqueForShortLinkAsync(id, dto.ShortCode))
+            {
+                await _repository.UpdateExistingShortLinkAsync(dto);
+            }
         }
 
         public Task DeleteAsync(Guid id, string ownerSubjectId)

@@ -37,6 +37,30 @@ namespace HexMaster.ShortLink.Core.Repositories
             return segment.Results.Count == 0;
         }
 
+        public async Task<bool> CheckIfShortCodeIsUniqueForShortLinkAsync(Guid id, string shortCode)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var partitionKeyFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.PartitionKey),
+                QueryComparisons.Equal,
+                PartitionKeys.ShortLinks);
+            var shortCodeFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.ShortCode),
+                QueryComparisons.Equal,
+                shortCode);
+            var idFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.RowKey),
+                QueryComparisons.NotEqual,
+                id.ToString());
+
+            var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And, TableQuery.CombineFilters(shortCodeFilter, TableOperators.And, idFilter));
+            var query = new TableQuery<ShortLinkEntity>().Where(queryFilter);
+            var segment = await table.ExecuteQuerySegmentedAsync(query, null);
+
+            return segment.Results.Count == 0;
+        }
+
         public async Task<ShortLinkDetailsDto> CreateNewShortLinkAsync(
             string shortCode, 
             string endpointUrl,
