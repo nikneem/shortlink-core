@@ -3,8 +3,11 @@ using Microsoft.Azure.Cosmos.Table;
 
 namespace HexMaster.ShortLink.Core.Entities
 {
-    internal sealed class ShortLinkEntity : TableEntity
+    public sealed class ShortLinkEntity : TableEntity
     {
+
+        internal ShortLinkEntity(){}
+
         public string OwnerId { get; set; }
         public string ShortCode { get; set; }
         public string EndpointUrl { get; set; }
