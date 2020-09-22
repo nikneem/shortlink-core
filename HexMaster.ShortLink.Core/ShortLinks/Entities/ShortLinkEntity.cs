@@ -5,9 +5,6 @@ namespace HexMaster.ShortLink.Core.Entities
 {
     public sealed class ShortLinkEntity : TableEntity
     {
-
-        internal ShortLinkEntity(){}
-
         public string OwnerId { get; set; }
         public string ShortCode { get; set; }
         public string EndpointUrl { get; set; }
