@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Entities;
+using HexMaster.ShortLink.Core.Exceptions;
 using HexMaster.ShortLink.Core.Helpers;
 using HexMaster.ShortLink.Core.Models;
 using Microsoft.Azure.Cosmos.Table;
@@ -61,6 +64,86 @@ namespace HexMaster.ShortLink.Core.Repositories
             return segment.Results.Count == 0;
         }
 
+        public async Task<List<ShortLinkListItemDto>> GetShortLinksListAsync(
+            string ownerId, 
+            int page,
+            int pageSize)
+        {
+            var completeList = new List<ShortLinkListItemDto>();
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var partitionKeyFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.PartitionKey),
+                QueryComparisons.Equal,
+                PartitionKeys.ShortLinks);
+            var ownerFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.OwnerId),
+                QueryComparisons.Equal,
+                ownerId);
+
+            var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And, ownerFilter);
+            var query = new TableQuery<ShortLinkEntity>().Where(queryFilter);
+            var ct = new TableContinuationToken();
+
+            do
+            {
+                var segment = await table.ExecuteQuerySegmentedAsync(query, ct);
+                ct = segment.ContinuationToken;
+                var models = segment.Results.Select(ent => new ShortLinkListItemDto
+                {
+                    Id = Guid.Parse(ent.RowKey),
+                    ShortCode = ent.ShortCode,
+                    TotalHits = ent.TotalHits,
+                    ExpirationOn = ent.ExpiresOn,
+                    EndpointUrl = ent.EndpointUrl
+                });
+                completeList.AddRange(models);
+            } while (ct != null);
+
+            if (page < 0)
+            {
+                page = 0;
+            }
+
+            if (pageSize < 10 || pageSize > 100)
+            {
+                pageSize = 25;
+            }
+
+            var skip = page * pageSize;
+
+            return completeList
+                .Skip(skip)
+                .Take(pageSize)
+                .ToList();
+        }
+
+        public async Task<ShortLinkDetailsDto> GetShortLinkDetailsAsync(string ownerId, Guid id)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var operation = TableOperation.Retrieve<ShortLinkEntity>(PartitionKeys.ShortLinks, id.ToString());
+            var result = await table.ExecuteAsync(operation);
+            if (result.Result is ShortLinkEntity entity)
+            {
+                if (entity.OwnerId != ownerId)
+                {
+                    throw new ShortLinkNotFoundException(id);
+                }
+                return new ShortLinkDetailsDto
+                {
+                    ShortCode = entity.ShortCode,
+                    EndpointUrl = entity.EndpointUrl,
+                    ExpirationOn = entity.ExpiresOn,
+                    TotalHits = entity.TotalHits,
+                    CreatedOn = entity.CreatedOn,
+                    Id = Guid.Parse(entity.RowKey)
+                };
+            }
+
+            throw new ShortLinkNotFoundException(id);
+        }
+
         public async Task<ShortLinkDetailsDto> CreateNewShortLinkAsync(
             string shortCode, 
             string endpointUrl,
@@ -84,17 +167,42 @@ namespace HexMaster.ShortLink.Core.Repositories
             return ShortLinkDetailsDto.CreateFromEntity(shortLinkEntity);
         }
 
-        public async Task UpdateExistingShortLinkAsync(ShortLinkUpdateDto dto)
+        public async Task UpdateExistingShortLinkAsync(string ownerId, ShortLinkUpdateDto dto)
         {
             var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
-            var entity = new DynamicTableEntity(PartitionKeys.ShortLinks, dto.Id.ToString()) {ETag = "*"};
+            var operation = TableOperation.Retrieve<ShortLinkEntity>(PartitionKeys.ShortLinks, dto.Id.ToString());
+            var result = await table.ExecuteAsync(operation);
+            if (result.Result is ShortLinkEntity entity)
+            {
+                if (entity.OwnerId != ownerId)
+                {
+                    throw new ShortLinkNotFoundException(dto.Id);
+                }
 
-            entity.Properties.Add(nameof(ShortLinkEntity.ShortCode), new EntityProperty(dto.ShortCode));
-            entity.Properties.Add(nameof(ShortLinkEntity.EndpointUrl), new EntityProperty(dto.EndpointUrl));
-            entity.Properties.Add(nameof(ShortLinkEntity.ExpiresOn), new EntityProperty(dto.ExpirationOn));
+                entity.ShortCode = dto.ShortCode;
+                entity.EndpointUrl = dto.EndpointUrl;
+                entity.ExpiresOn = dto.ExpirationOn;
 
-            var mergeOperation = TableOperation.Merge(entity);
-            await table.ExecuteAsync(mergeOperation);
+                var mergeOperation = TableOperation.InsertOrReplace(entity);
+                await table.ExecuteAsync(mergeOperation);
+            }
+        }
+
+        public async Task DeleteShortLinkAsync(string ownerId, Guid id)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var fetchOperation = TableOperation.Retrieve<ShortLinkEntity>(PartitionKeys.ShortLinks, id.ToString());
+            var result = await table.ExecuteAsync(fetchOperation);
+            if (result.Result is ShortLinkEntity entity)
+            {
+                if (entity.OwnerId != ownerId)
+                {
+                    throw new ShortLinkNotFoundException(id);
+                }
+                var operation = TableOperation.Delete(entity);
+                await table.ExecuteAsync(operation);
+            }
         }
     }
 }

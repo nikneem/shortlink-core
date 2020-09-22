@@ -35,24 +35,24 @@ namespace HexMaster.ShortLink.Core.Services
             return shortCode;
         }
 
-        public Task<List<ShortLinkListItemDto>> ListAsync(string ownerSubjectId)
+        public Task<List<ShortLinkListItemDto>> ListAsync(string ownerSubjectId, int page, int pageSize)
         {
-            throw new NotImplementedException();
+            return _repository.GetShortLinksListAsync(ownerSubjectId, page, pageSize);
         }
 
-        public async Task<ShortLinkDetailsDto> CreateAsync(ShortLinkCreateDto dto, string ownerSubjectId)
+        public async Task<ShortLinkDetailsDto> CreateAsync(string ownerSubjectId, ShortLinkCreateDto dto)
         {
             await ShortLinkCreateValidator.ValidateModelAsync(dto);
             var shortCode = await GenerateUniqueShortLink();
             return await _repository.CreateNewShortLinkAsync(shortCode, dto.EndpointUrl, ownerSubjectId);
         }
 
-        public Task<ShortLinkDetailsDto> ReadAsync(Guid id, string ownerSubjectId)
+        public Task<ShortLinkDetailsDto> ReadAsync(string ownerSubjectId, Guid id)
         {
-            throw new NotImplementedException();
+            return _repository.GetShortLinkDetailsAsync(ownerSubjectId, id);
         }
 
-        public async Task UpdateAsync(Guid id, ShortLinkUpdateDto dto, string ownerSubjectId)
+        public async Task UpdateAsync(string ownerSubjectId, Guid id, ShortLinkUpdateDto dto)
         {
             if (!id.Equals(dto.Id))
             {
@@ -61,24 +61,14 @@ namespace HexMaster.ShortLink.Core.Services
             await ShortLinkUpdateValidator.ValidateModelAsync(dto);
             if (await _repository.CheckIfShortCodeIsUniqueForShortLinkAsync(id, dto.ShortCode))
             {
-                await _repository.UpdateExistingShortLinkAsync(dto);
+                await _repository.UpdateExistingShortLinkAsync(ownerSubjectId,dto);
             }
         }
 
-        public Task DeleteAsync(Guid id, string ownerSubjectId)
+        public Task DeleteAsync(string ownerSubjectId, Guid id)
         {
-            throw new NotImplementedException();
+            return _repository.DeleteShortLinkAsync(ownerSubjectId, id);
         }
 
-        public async Task UpdateAsync(Guid id, ShortLinkUpdateDto dto)
-        {
-            await ShortLinkUpdateValidator.ValidateModelAsync(dto);
-            if (!Equals(id, dto.Id))
-            {
-                throw new Exception("Unexpected request, cannot update the short link");
-            }
-            await _repository.UpdateExistingShortLinkAsync(dto);
-          
-        }
     }
 }

@@ -8,11 +8,11 @@ namespace HexMaster.ShortLink.Core.Contracts
     public interface IShortLinksService
     {
         Task<string> GenerateUniqueShortLink();
-        Task<List<ShortLinkListItemDto>> ListAsync(string ownerSubjectId);
-        Task<ShortLinkDetailsDto> CreateAsync(ShortLinkCreateDto dto, string ownerSubjectId);
-        Task<ShortLinkDetailsDto> ReadAsync(Guid id, string ownerSubjectId);
-        Task UpdateAsync(Guid id, ShortLinkUpdateDto dto, string ownerSubjectId);
-        Task DeleteAsync(Guid id, string ownerSubjectId);
+        Task<List<ShortLinkListItemDto>> ListAsync(string ownerSubjectId, int page, int pageSize);
+        Task<ShortLinkDetailsDto> CreateAsync(string ownerSubjectId, ShortLinkCreateDto dto);
+        Task<ShortLinkDetailsDto> ReadAsync(string ownerSubjectId, Guid id);
+        Task UpdateAsync(string ownerSubjectId, Guid id, ShortLinkUpdateDto dto);
+        Task DeleteAsync(string ownerSubjectId, Guid id);
 
     }
 }
