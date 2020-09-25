@@ -5,6 +5,7 @@
         public const string SectionName = "CloudSettings";
 
         public string StorageConnectionString { get; set; }
-        public string EventHubConnectionString { get; set; }
+        public string EventHubSenderConnectionString { get; set; }
+        public string EventHubListenerConnectionString { get; set; }
     }
 }

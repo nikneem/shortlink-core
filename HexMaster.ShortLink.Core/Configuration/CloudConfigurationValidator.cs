@@ -12,10 +12,15 @@ namespace HexMaster.ShortLink.Core.Configuration
                 return ValidateOptionsResult.Fail($"Object {nameof(options)} may not be null");
             }
 
-            if (string.IsNullOrEmpty(options.EventHubConnectionString))
+            if (string.IsNullOrEmpty(options.EventHubSenderConnectionString))
             {
                 return ValidateOptionsResult.Fail(
-                    $"Missing configuration setting for {CloudConfiguration.SectionName}:{nameof(options.EventHubConnectionString)}");
+                    $"Missing configuration setting for {CloudConfiguration.SectionName}:{nameof(options.EventHubSenderConnectionString)}");
+            }
+            if (string.IsNullOrEmpty(options.EventHubListenerConnectionString))
+            {
+                return ValidateOptionsResult.Fail(
+                    $"Missing configuration setting for {CloudConfiguration.SectionName}:{nameof(options.EventHubListenerConnectionString)}");
             }
             if (string.IsNullOrEmpty(options.StorageConnectionString))
             {
