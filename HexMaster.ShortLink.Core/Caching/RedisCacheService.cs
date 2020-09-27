@@ -57,7 +57,7 @@ namespace HexMaster.ShortLink.Core.Caching
             if (model == null && initializeFunction!=null)
             {
                 model = await initializeFunction();
-                if (cacheIsAvailable)
+                if (cacheIsAvailable && model != null)
                 {
                     await StoreInCacheAsync(key, model);
                 }

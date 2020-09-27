@@ -1,4 +1,6 @@
-﻿using HexMaster.ShortLink.Core.Contracts;
+﻿using HexMaster.ShortLink.Core.Caching;
+using HexMaster.ShortLink.Core.Caching.Contracts;
+using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Helpers;
 using HexMaster.ShortLink.Core.Repositories;
 using HexMaster.ShortLink.Core.Services;
@@ -17,6 +19,7 @@ namespace HexMaster.ShortLink.Core.Configuration
 
 
             serviceCollection.AddScoped<ICloudTableFactory, CloudTableFactory>();
+            serviceCollection.AddScoped<IRedisCacheServiceFactory, RedisCacheServiceFactory>();
             serviceCollection.AddScoped<IShortLinksService, ShortLinksService>();
             serviceCollection.AddScoped<IShortLinksRepository, ShortLinksRepository>();
 
