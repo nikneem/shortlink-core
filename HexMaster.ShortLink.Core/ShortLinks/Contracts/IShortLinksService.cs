@@ -14,5 +14,7 @@ namespace HexMaster.ShortLink.Core.Contracts
         Task UpdateAsync(string ownerSubjectId, Guid id, ShortLinkUpdateDto dto);
         Task DeleteAsync(string ownerSubjectId, Guid id);
 
+        Task<string> Resolve(string code);
+
     }
 }

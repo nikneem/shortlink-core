@@ -27,6 +27,11 @@ namespace HexMaster.ShortLink.Core.Configuration
                 return ValidateOptionsResult.Fail(
                     $"Missing configuration setting for {CloudConfiguration.SectionName}:{nameof(options.StorageConnectionString)}");
             }
+            if (string.IsNullOrEmpty(options.RedisCacheConnectionString))
+            {
+                return ValidateOptionsResult.Fail(
+                    $"Missing configuration setting for {CloudConfiguration.SectionName}:{nameof(options.RedisCacheConnectionString)}");
+            }
 
             return ValidateOptionsResult.Success;
         }

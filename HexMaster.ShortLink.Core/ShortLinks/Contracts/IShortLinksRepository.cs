@@ -23,5 +23,7 @@ namespace HexMaster.ShortLink.Core.Contracts
 
         Task DeleteShortLinkAsync(string ownerId, Guid id);
 
+        Task<string> Resolve(string shortCode);
+
     }
 }

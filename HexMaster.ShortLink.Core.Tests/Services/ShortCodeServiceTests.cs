@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using HexMaster.ShortLink.Core.Caching.Contracts;
 using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Helpers;
 using HexMaster.ShortLink.Core.Services;
@@ -11,16 +12,23 @@ namespace HexMaster.ShortLink.Core.Tests.Services
     {
 
         private Mock<IShortLinksRepository> _shortLinksRepositoryMock;
+        private Mock<IRedisCacheServiceFactory> _redisCacheServiceFactoryMock;
         private ShortLinksService _service;
 
         [SetUp]
         public void Setup()
         {
             _shortLinksRepositoryMock = new Mock<IShortLinksRepository>();
+            _redisCacheServiceFactoryMock = new Mock<IRedisCacheServiceFactory>();
+
+            var cacheService = new Mock<IRedisCacheService>();
+            _redisCacheServiceFactoryMock.Setup(fac => fac.Connect())
+                .Returns(cacheService.Object);
 
             var generator = new ShortCodeGenerator();
             _service = new ShortLinksService(
                 _shortLinksRepositoryMock.Object,
+                _redisCacheServiceFactoryMock.Object,
                 generator);
         }
 

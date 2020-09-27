@@ -7,5 +7,6 @@
         public string StorageConnectionString { get; set; }
         public string EventHubSenderConnectionString { get; set; }
         public string EventHubListenerConnectionString { get; set; }
+        public string RedisCacheConnectionString { get; set; }
     }
 }

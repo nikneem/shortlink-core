@@ -204,5 +204,27 @@ namespace HexMaster.ShortLink.Core.Repositories
                 await table.ExecuteAsync(operation);
             }
         }
+
+        public async Task<string> Resolve(string shortCode)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var pkQuery = TableQuery.GenerateFilterCondition(nameof(ShortLinkEntity.PartitionKey),
+                QueryComparisons.Equal,
+                PartitionKeys.ShortLinks);
+            var shortCodeQuery =
+                TableQuery.GenerateFilterCondition(nameof(ShortLinkEntity.ShortCode),
+                    QueryComparisons.Equal, shortCode);
+            var expirationQuery = TableQuery.GenerateFilterConditionForDate(
+                nameof(ShortLinkEntity.ExpiresOn),
+                QueryComparisons.GreaterThanOrEqual, DateTimeOffset.UtcNow);
+
+            var query = new TableQuery<ShortLinkEntity>().Where(TableQuery.CombineFilters(expirationQuery, TableOperators.And,TableQuery.CombineFilters(pkQuery, TableOperators.And,
+                shortCodeQuery))).Take(1);
+            var ct = new TableContinuationToken();
+            var queryResult = await table.ExecuteQuerySegmentedAsync(query, ct);
+            var entity = queryResult.Results.FirstOrDefault();
+            return entity?.EndpointUrl;
+        }
     }
 }

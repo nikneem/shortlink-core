@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HexMaster.ShortLink.Core.Caching.Contracts;
 using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Exceptions;
 using HexMaster.ShortLink.Core.Helpers;
@@ -12,13 +13,16 @@ namespace HexMaster.ShortLink.Core.Services
     public class ShortLinksService : IShortLinksService
     {
         private readonly IShortLinksRepository _repository;
+        private readonly IRedisCacheServiceFactory _redisCacheServiceFactory;
         private readonly ShortCodeGenerator _generator;
 
         public ShortLinksService(
             IShortLinksRepository repository,
+            IRedisCacheServiceFactory redisCacheServiceFactory,
             ShortCodeGenerator generator)
         {
             _repository = repository;
+            _redisCacheServiceFactory = redisCacheServiceFactory;
             _generator = generator;
         }
 
@@ -61,13 +65,29 @@ namespace HexMaster.ShortLink.Core.Services
             await ShortLinkUpdateValidator.ValidateModelAsync(dto);
             if (await _repository.CheckIfShortCodeIsUniqueForShortLinkAsync(id, dto.ShortCode))
             {
-                await _repository.UpdateExistingShortLinkAsync(ownerSubjectId,dto);
+                await _repository.UpdateExistingShortLinkAsync(ownerSubjectId, dto);
             }
         }
 
         public Task DeleteAsync(string ownerSubjectId, Guid id)
         {
             return _repository.DeleteShortLinkAsync(ownerSubjectId, id);
+        }
+
+        public async Task<string> Resolve(string code)
+        {
+            return await ResolveEndpointByShortCodeAsync(code);
+        }
+
+        private async Task<string> ResolveEndpointByShortCodeAsync(string shortCode)
+        {
+            var cacheKey = $"ShortCodeEntry-{shortCode}";
+            var cache =  _redisCacheServiceFactory.Connect();
+            return await cache.GetOrAddCachedAsync(cacheKey, () => ResolveEndpointByShortCodeFromStorageAsync(shortCode));
+        }
+        private async Task<string> ResolveEndpointByShortCodeFromStorageAsync(string shortCode)
+        {
+            return await _repository.Resolve(shortCode);
         }
 
     }
