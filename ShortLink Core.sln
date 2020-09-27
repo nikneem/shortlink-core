@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{A5CA7CE7-4BE2-4F12-9FF0-6620D421C197}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexMaster.ShortLink.Core", "HexMaster.ShortLink.Core\HexMaster.ShortLink.Core.csproj", "{E537D02D-BE22-487E-86A1-2331F7BD8C56}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{15DCE295-29A9-4536-8F22-E08F640B3A26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexMaster.ShortLink.Core.Tests", "HexMaster.ShortLink.Core.Tests\HexMaster.ShortLink.Core.Tests.csproj", "{210C1C04-9956-4E84-BD6C-A6E3CE76EB53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexMaster.ShortLink.Core.Tests", "HexMaster.ShortLink.Core.Tests\HexMaster.ShortLink.Core.Tests.csproj", "{210C1C04-9956-4E84-BD6C-A6E3CE76EB53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexMaster.ShortLink.Core", "HexMaster.ShortLink.Core\HexMaster.ShortLink.Core.csproj", "{04289135-EC0F-490E-B0FF-505A9E99392F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,21 +17,21 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E537D02D-BE22-487E-86A1-2331F7BD8C56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E537D02D-BE22-487E-86A1-2331F7BD8C56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E537D02D-BE22-487E-86A1-2331F7BD8C56}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E537D02D-BE22-487E-86A1-2331F7BD8C56}.Release|Any CPU.Build.0 = Release|Any CPU
 		{210C1C04-9956-4E84-BD6C-A6E3CE76EB53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{210C1C04-9956-4E84-BD6C-A6E3CE76EB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{210C1C04-9956-4E84-BD6C-A6E3CE76EB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{210C1C04-9956-4E84-BD6C-A6E3CE76EB53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04289135-EC0F-490E-B0FF-505A9E99392F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04289135-EC0F-490E-B0FF-505A9E99392F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04289135-EC0F-490E-B0FF-505A9E99392F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04289135-EC0F-490E-B0FF-505A9E99392F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{E537D02D-BE22-487E-86A1-2331F7BD8C56} = {A5CA7CE7-4BE2-4F12-9FF0-6620D421C197}
 		{210C1C04-9956-4E84-BD6C-A6E3CE76EB53} = {15DCE295-29A9-4536-8F22-E08F640B3A26}
+		{04289135-EC0F-490E-B0FF-505A9E99392F} = {A5CA7CE7-4BE2-4F12-9FF0-6620D421C197}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {548C17A1-B4EB-48B2-A281-AABD372853BB}
