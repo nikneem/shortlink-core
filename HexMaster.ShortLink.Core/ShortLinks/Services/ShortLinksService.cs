@@ -74,7 +74,7 @@ namespace HexMaster.ShortLink.Core.Services
             return _repository.DeleteShortLinkAsync(ownerSubjectId, id);
         }
 
-        public async Task<string> Resolve(string code)
+        public async Task<string> ResolveAsync(string code)
         {
             return await ResolveEndpointByShortCodeAsync(code);
         }
