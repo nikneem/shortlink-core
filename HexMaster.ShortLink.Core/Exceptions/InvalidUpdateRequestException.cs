@@ -1,11 +1,12 @@
 ﻿using System;
+using HexMaster.ShortLink.Core.Enums;
 
 namespace HexMaster.ShortLink.Core.Exceptions
 {
-    public sealed class InvalidUpdateRequestException : Exception
+    public sealed class InvalidUpdateRequestException : ShortLinkException
     {
         public InvalidUpdateRequestException(string message, Exception ex = null)
-            : base(message, ex)
+            : base(ErrorCode.InvalidUpdateRequestErrorCode, message, ex)
         {
         }
     }

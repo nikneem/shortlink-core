@@ -4,6 +4,8 @@
     {
         public static readonly ErrorCode InvalidUrl;
         public static readonly ErrorCode InvalidShortCode;
+        public static readonly ErrorCode ShortCodeNotFoundErrorCode;
+        public static readonly ErrorCode InvalidUpdateRequestErrorCode;
         public static readonly ErrorCode[] All;
 
 
@@ -31,6 +33,18 @@
     {
         public override string Code => "InvalidShortCode";
         public override string Description => "The short code must start with a letter, contain only alphanumeric characters all lower case and must be between 2 and 20 characters long";
+        public override string TranslationKey => $"ErrorCode.{Code}";
+    }
+    public class ShortCodeNotFoundErrorCode : ErrorCode
+    {
+        public override string Code => "ShortCodeNotFound";
+        public override string Description => "The requested ShortCode could not be found";
+        public override string TranslationKey => $"ErrorCode.{Code}";
+    }
+    public class InvalidUpdateRequestErrorCode : ErrorCode
+    {
+        public override string Code => "InvalidUpdateRequest";
+        public override string Description => "The update request was invalid. Nothing was done.";
         public override string TranslationKey => $"ErrorCode.{Code}";
     }
 }

@@ -205,7 +205,7 @@ namespace HexMaster.ShortLink.Core.Repositories
             }
         }
 
-        public async Task<string> Resolve(string shortCode)
+        public async Task<string> ResolveAsync(string shortCode)
         {
             var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
 

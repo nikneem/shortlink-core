@@ -94,7 +94,7 @@ namespace HexMaster.ShortLink.Core.Services
         }
         private async Task<string> ResolveEndpointByShortCodeFromStorageAsync(string shortCode)
         {
-            return await _repository.Resolve(shortCode);
+            return await _repository.ResolveAsync(shortCode);
         }
 
     }

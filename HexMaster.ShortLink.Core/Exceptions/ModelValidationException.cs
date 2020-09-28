@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using HexMaster.ShortLink.Core.Enums;
-using Microsoft.Azure.Documents;
 
 namespace HexMaster.ShortLink.Core.Exceptions
 {
