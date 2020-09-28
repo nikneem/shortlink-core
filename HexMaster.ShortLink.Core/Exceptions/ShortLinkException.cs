@@ -13,5 +13,10 @@ namespace HexMaster.ShortLink.Core.Exceptions
         {
             Errors = new[] {errorCode};
         }
+        public ShortLinkException(List<ErrorCode> errorCode, string message, Exception innerException = null)
+            : base(message, innerException)
+        {
+            Errors = errorCode;
+        }
     }
 }

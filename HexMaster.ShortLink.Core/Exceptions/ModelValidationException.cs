@@ -4,17 +4,14 @@ using HexMaster.ShortLink.Core.Enums;
 
 namespace HexMaster.ShortLink.Core.Exceptions
 {
-    public class ModelValidationException : Exception
+    public class ModelValidationException : ShortLinkException
     {
-        public IReadOnlyList<ErrorCode> Errors { get; }
-
         public ModelValidationException(
             List<ErrorCode> errors,
             string message = "Found a validation error",
             Exception innerException = null)
-        :base(message, innerException)
+            : base(errors, message, innerException)
         {
-            Errors = errors;
         }
     }
 }
