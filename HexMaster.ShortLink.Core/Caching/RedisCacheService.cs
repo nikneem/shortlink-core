@@ -68,8 +68,16 @@ namespace HexMaster.ShortLink.Core.Caching
 
         public async Task<bool> Invalidate(string key)
         {
-            await Connect();
-            return await _database.KeyDeleteAsync(key);
+            try
+            {
+                await Connect();
+                return await _database.KeyDeleteAsync(key);
+            }
+            catch (Exception)
+            {
+                ;
+            }
+            return false;
         }
 
         private async Task Connect()

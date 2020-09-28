@@ -65,6 +65,7 @@ namespace HexMaster.ShortLink.Core.Services
             await ShortLinkUpdateValidator.ValidateModelAsync(dto);
             if (await _repository.CheckIfShortCodeIsUniqueForShortLinkAsync(id, dto.ShortCode))
             {
+                await InvalidateCacheAsync(dto.ShortCode);
                 await _repository.UpdateExistingShortLinkAsync(ownerSubjectId, dto);
             }
         }
@@ -84,6 +85,12 @@ namespace HexMaster.ShortLink.Core.Services
             var cacheKey = $"ShortCodeEntry-{shortCode}";
             var cache =  _redisCacheServiceFactory.Connect();
             return await cache.GetOrAddCachedAsync(cacheKey, () => ResolveEndpointByShortCodeFromStorageAsync(shortCode));
+        }
+        private Task<bool> InvalidateCacheAsync(string shortCode)
+        {
+            var cacheKey = $"ShortCodeEntry-{shortCode}";
+            var cache =  _redisCacheServiceFactory.Connect();
+            return cache.Invalidate(cacheKey);
         }
         private async Task<string> ResolveEndpointByShortCodeFromStorageAsync(string shortCode)
         {
