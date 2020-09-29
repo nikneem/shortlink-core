@@ -21,7 +21,10 @@ namespace HexMaster.ShortLink.Core.Charts
 
         public async Task<List<HourlyHitsDto>> GetHourlyChartAsync(string shortCode, int hours = 24)
         {
-            var startDate = DateTimeOffset.UtcNow.AddHours(-hours);
+            var startDate = DateTimeOffset.UtcNow
+                .AddHours(-hours)
+                .AddMinutes(-DateTimeOffset.UtcNow.Minute)
+                .AddSeconds(-DateTimeOffset.UtcNow.Second);
             var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.HitsPerHour);
 
             var partitionKeyFilter = TableQuery.GenerateFilterCondition(
@@ -71,7 +74,11 @@ namespace HexMaster.ShortLink.Core.Charts
 
         public async Task<List<DailyHitsDto>> GetDailyChartAsync(string shortCode, int days = 30)
         {
-            var startDate = DateTimeOffset.UtcNow.AddDays(-days);
+            var startDate = DateTimeOffset.UtcNow
+                .AddDays(-days)
+                .AddHours(-DateTimeOffset.UtcNow.Hour)
+                .AddMinutes(-DateTimeOffset.UtcNow.Minute)
+                .AddSeconds(-DateTimeOffset.UtcNow.Second);
             var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.HitsPerDay);
 
             var partitionKeyFilter = TableQuery.GenerateFilterCondition(
