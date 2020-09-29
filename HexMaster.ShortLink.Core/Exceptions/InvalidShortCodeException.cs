@@ -6,7 +6,7 @@ namespace HexMaster.ShortLink.Core.Exceptions
     {
 
         public InvalidShortCodeException(string shortCode) :
-            base(ErrorCode.InvalidShortCode, $"ShortCode '{}' is not a valid short code")
+            base(ErrorCode.InvalidShortCode, $"ShortCode '{shortCode}' is not a valid short code")
         {
         }
 
