@@ -18,7 +18,9 @@
             All = new[]
             {
                 InvalidUrl = new InvalidUrlErrorCode(),
-                InvalidShortCode = new InvalidShortCodeErrorCode()
+                InvalidShortCode = new InvalidShortCodeErrorCode(),
+                ShortCodeNotFoundErrorCode = new InvalidShortCodeErrorCode(),
+                InvalidUpdateRequestErrorCode = new InvalidShortCodeErrorCode()
             };
         }
 
@@ -47,4 +49,5 @@
         public override string Description => "The update request was invalid. Nothing was done.";
         public override string TranslationKey => $"ErrorCode.{Code}";
     }
+
 }

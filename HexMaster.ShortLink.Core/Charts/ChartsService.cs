@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HexMaster.ShortLink.Core.Caching.Contracts;
 using HexMaster.ShortLink.Core.Charts.Contracts;
 using HexMaster.ShortLink.Core.Charts.Models;
+using HexMaster.ShortLink.Core.Exceptions;
 
 namespace HexMaster.ShortLink.Core.Charts
 {
@@ -21,15 +22,26 @@ namespace HexMaster.ShortLink.Core.Charts
 
         public async Task<List<HourlyHitsDto>> GetHourlyChartsAsync(string shortCode)
         {
+            ValidateShortCode(shortCode);
             return await GetHourlyHitsChartsFromCacheOrRepositoryAsync(shortCode);
         }
         public async Task<List<DailyHitsDto>> GetDailyChartsAsync(string shortCode)
         {
+            ValidateShortCode(shortCode);
             return await GetDailyHitsChartsFromCacheOrRepositoryAsync(shortCode);
         }
         public async Task<List<HourlyHitsDto>> GetSparkChartsAsync(string shortCode)
         {
-            return await GetHourlyHitsChartsFromCacheOrRepositoryAsync(shortCode);
+            ValidateShortCode(shortCode);
+            return await GetSparkChartsFromCacheOrRepositoryAsync(shortCode);
+        }
+
+        private void ValidateShortCode(string shortCode)
+        {
+            if (!Regex.IsMatch(shortCode, Constants.ShortCodeRegularExpression))
+            {
+                throw new InvalidShortCodeException(shortCode);
+            }
         }
 
 
