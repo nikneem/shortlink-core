@@ -7,8 +7,6 @@ namespace HexMaster.ShortLink.Core.Contracts
 {
     public interface IShortLinksRepository
     {
-        Task<bool> CheckIfShortCodeIsUniqueAsync(string shortCode);
-        Task<bool> CheckIfShortCodeIsUniqueForShortLinkAsync(Guid id, string shortCode);
 
         Task<List<ShortLinkListItemDto>> GetShortLinksListAsync(string ownerId, int page, int pageSize);
 
@@ -23,6 +21,12 @@ namespace HexMaster.ShortLink.Core.Contracts
 
         Task DeleteShortLinkAsync(string ownerId, Guid id);
 
+        Task IncreaseHitsAsync(string shortCode);
+        
+        Task<bool> CheckIfShortCodeIsUniqueAsync(string shortCode);
+        
+        Task<bool> CheckIfShortCodeIsUniqueForShortLinkAsync(Guid id, string shortCode);
+        
         Task<string> ResolveAsync(string shortCode);
 
     }
