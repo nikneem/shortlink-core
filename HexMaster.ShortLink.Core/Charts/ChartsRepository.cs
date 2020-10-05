@@ -30,14 +30,14 @@ namespace HexMaster.ShortLink.Core.Charts
             var partitionKeyFilter = TableQuery.GenerateFilterCondition(
                 nameof(HitsAggregateHourlyEntity.PartitionKey),
                 QueryComparisons.Equal,
-                PartitionKeys.ShortLinks);
+                PartitionKeys.HitsPerHour);
             var shortCodeFilter = TableQuery.GenerateFilterCondition(
                 nameof(HitsAggregateHourlyEntity.ShortCode),
                 QueryComparisons.Equal,
                 shortCode);
             var dateFilter = TableQuery.GenerateFilterConditionForDate(
                 nameof(HitsAggregateHourlyEntity.AggregateRangeStart),
-                QueryComparisons.Equal,
+                QueryComparisons.GreaterThanOrEqual,
                 startDate);
 
             var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And,
@@ -84,14 +84,14 @@ namespace HexMaster.ShortLink.Core.Charts
             var partitionKeyFilter = TableQuery.GenerateFilterCondition(
                 nameof(HitsAggregateHourlyEntity.PartitionKey),
                 QueryComparisons.Equal,
-                PartitionKeys.ShortLinks);
+                PartitionKeys.HitsPerDay);
             var shortCodeFilter = TableQuery.GenerateFilterCondition(
                 nameof(HitsAggregateHourlyEntity.ShortCode),
                 QueryComparisons.Equal,
                 shortCode);
             var dateFilter = TableQuery.GenerateFilterConditionForDate(
                 nameof(HitsAggregateHourlyEntity.AggregateRangeStart),
-                QueryComparisons.Equal,
+                QueryComparisons.GreaterThanOrEqual,
                 startDate);
 
             var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And,
