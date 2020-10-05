@@ -20,52 +20,10 @@ namespace HexMaster.ShortLink.Core.Repositories
             _tableFactory = tableFactory;
         }
 
-        public async Task<bool> CheckIfShortCodeIsUniqueAsync(string shortCode)
-        {
-            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
 
-            var partitionKeyFilter = TableQuery.GenerateFilterCondition(
-                nameof(ShortLinkEntity.PartitionKey),
-                QueryComparisons.Equal,
-                PartitionKeys.ShortLinks);
-            var shortCodeFilter = TableQuery.GenerateFilterCondition(
-                nameof(ShortLinkEntity.ShortCode),
-                QueryComparisons.Equal,
-                shortCode);
-
-            var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And, shortCodeFilter);
-            var query = new TableQuery<ShortLinkEntity>().Where(queryFilter);
-            var segment = await table.ExecuteQuerySegmentedAsync(query, null);
-
-            return segment.Results.Count == 0;
-        }
-
-        public async Task<bool> CheckIfShortCodeIsUniqueForShortLinkAsync(Guid id, string shortCode)
-        {
-            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
-
-            var partitionKeyFilter = TableQuery.GenerateFilterCondition(
-                nameof(ShortLinkEntity.PartitionKey),
-                QueryComparisons.Equal,
-                PartitionKeys.ShortLinks);
-            var shortCodeFilter = TableQuery.GenerateFilterCondition(
-                nameof(ShortLinkEntity.ShortCode),
-                QueryComparisons.Equal,
-                shortCode);
-            var idFilter = TableQuery.GenerateFilterCondition(
-                nameof(ShortLinkEntity.RowKey),
-                QueryComparisons.NotEqual,
-                id.ToString());
-
-            var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And, TableQuery.CombineFilters(shortCodeFilter, TableOperators.And, idFilter));
-            var query = new TableQuery<ShortLinkEntity>().Where(queryFilter);
-            var segment = await table.ExecuteQuerySegmentedAsync(query, null);
-
-            return segment.Results.Count == 0;
-        }
 
         public async Task<List<ShortLinkListItemDto>> GetShortLinksListAsync(
-            string ownerId, 
+            string ownerId,
             int page,
             int pageSize)
         {
@@ -130,6 +88,7 @@ namespace HexMaster.ShortLink.Core.Repositories
                 {
                     throw new ShortLinkNotFoundException(id);
                 }
+
                 return new ShortLinkDetailsDto
                 {
                     ShortCode = entity.ShortCode,
@@ -145,7 +104,7 @@ namespace HexMaster.ShortLink.Core.Repositories
         }
 
         public async Task<ShortLinkDetailsDto> CreateNewShortLinkAsync(
-            string shortCode, 
+            string shortCode,
             string endpointUrl,
             string ownerId)
         {
@@ -200,7 +159,33 @@ namespace HexMaster.ShortLink.Core.Repositories
                 {
                     throw new ShortLinkNotFoundException(id);
                 }
+
                 var operation = TableOperation.Delete(entity);
+                await table.ExecuteAsync(operation);
+            }
+        }
+
+        public async Task IncreaseHitsAsync(string shortCode)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var partitionKeyFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.PartitionKey),
+                QueryComparisons.Equal,
+                PartitionKeys.ShortLinks);
+            var shortCodeFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.ShortCode),
+                QueryComparisons.Equal,
+                shortCode);
+
+            var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And, shortCodeFilter);
+            var query = new TableQuery<ShortLinkEntity>().Where(queryFilter).Take(1);
+            var segment = await table.ExecuteQuerySegmentedAsync(query, null);
+            var entity = segment.Results.FirstOrDefault();
+            if (entity != null)
+            {
+                entity.TotalHits++;
+                var operation = TableOperation.Merge(entity);
                 await table.ExecuteAsync(operation);
             }
         }
@@ -219,12 +204,59 @@ namespace HexMaster.ShortLink.Core.Repositories
                 nameof(ShortLinkEntity.ExpiresOn),
                 QueryComparisons.GreaterThanOrEqual, DateTimeOffset.UtcNow);
 
-            var query = new TableQuery<ShortLinkEntity>().Where(TableQuery.CombineFilters(expirationQuery, TableOperators.And,TableQuery.CombineFilters(pkQuery, TableOperators.And,
-                shortCodeQuery))).Take(1);
+            var query = new TableQuery<ShortLinkEntity>().Where(TableQuery.CombineFilters(expirationQuery,
+                TableOperators.And, TableQuery.CombineFilters(pkQuery, TableOperators.And,
+                    shortCodeQuery))).Take(1);
             var ct = new TableContinuationToken();
             var queryResult = await table.ExecuteQuerySegmentedAsync(query, ct);
             var entity = queryResult.Results.FirstOrDefault();
             return entity?.EndpointUrl;
         }
+
+        public async Task<bool> CheckIfShortCodeIsUniqueAsync(string shortCode)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var partitionKeyFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.PartitionKey),
+                QueryComparisons.Equal,
+                PartitionKeys.ShortLinks);
+            var shortCodeFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.ShortCode),
+                QueryComparisons.Equal,
+                shortCode);
+
+            var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And, shortCodeFilter);
+            var query = new TableQuery<ShortLinkEntity>().Where(queryFilter);
+            var segment = await table.ExecuteQuerySegmentedAsync(query, null);
+
+            return segment.Results.Count == 0;
+        }
+
+        public async Task<bool> CheckIfShortCodeIsUniqueForShortLinkAsync(Guid id, string shortCode)
+        {
+            var table = await _tableFactory.GetCloudTableReferenceAsync(TableNames.ShortLinks);
+
+            var partitionKeyFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.PartitionKey),
+                QueryComparisons.Equal,
+                PartitionKeys.ShortLinks);
+            var shortCodeFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.ShortCode),
+                QueryComparisons.Equal,
+                shortCode);
+            var idFilter = TableQuery.GenerateFilterCondition(
+                nameof(ShortLinkEntity.RowKey),
+                QueryComparisons.NotEqual,
+                id.ToString());
+
+            var queryFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And,
+                TableQuery.CombineFilters(shortCodeFilter, TableOperators.And, idFilter));
+            var query = new TableQuery<ShortLinkEntity>().Where(queryFilter);
+            var segment = await table.ExecuteQuerySegmentedAsync(query, null);
+
+            return segment.Results.Count == 0;
+        }
+
     }
 }
