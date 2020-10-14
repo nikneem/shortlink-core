@@ -15,6 +15,16 @@ namespace HexMaster.ShortLink.Core.Hits
             await _repository.CreateNewAsync(eventDate, shortCode);
             await _shortlinksRepository.IncreaseHitsAsync(shortCode);
         }
+
+        public async Task RestoreHitsCount()
+        {
+            var totalHits = await _repository.GetHitsPerShortCode();
+            foreach (var hit in totalHits)
+            {
+                await _shortlinksRepository.SetHitsAsync(hit.Item1, hit.Item2);
+            }
+        }
+
         public HitsService(IHitsRepository repository,
             IShortLinksRepository shortlinksRepository)
         {

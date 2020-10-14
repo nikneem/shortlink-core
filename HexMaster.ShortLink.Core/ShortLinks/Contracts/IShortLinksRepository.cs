@@ -22,6 +22,7 @@ namespace HexMaster.ShortLink.Core.Contracts
         Task DeleteShortLinkAsync(string ownerId, Guid id);
 
         Task IncreaseHitsAsync(string shortCode);
+        Task SetHitsAsync(string shortCode, int hits);
         
         Task<bool> CheckIfShortCodeIsUniqueAsync(string shortCode);
         
