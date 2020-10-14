@@ -4,6 +4,8 @@ using HexMaster.ShortLink.Core.Charts;
 using HexMaster.ShortLink.Core.Charts.Contracts;
 using HexMaster.ShortLink.Core.Contracts;
 using HexMaster.ShortLink.Core.Helpers;
+using HexMaster.ShortLink.Core.Hits;
+using HexMaster.ShortLink.Core.Hits.Contracts;
 using HexMaster.ShortLink.Core.Repositories;
 using HexMaster.ShortLink.Core.Services;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +28,8 @@ namespace HexMaster.ShortLink.Core.Configuration
             serviceCollection.AddScoped<IShortLinksRepository, ShortLinksRepository>();
             serviceCollection.AddScoped<IChartsService, ChartsService>();
             serviceCollection.AddScoped<IChartsRepository, ChartsRepository>();
+            serviceCollection.AddScoped<IHitsService, HitsService>();
+            serviceCollection.AddScoped<IHitsRepository, HitsRepository>();
 
             serviceCollection.AddSingleton<ShortCodeGenerator>();
         }
